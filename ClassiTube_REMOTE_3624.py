@@ -1,36 +1,15 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.feature_extraction.text import TfidfVectorizer
+import sys
 
-#Read Data
-
-#data = np.loadtxt('USvideos_modified.csv', dtype=delimiter=',', usecols=(15), skiprows=1)
-
+#data = np.loadtxt('USvideos_modified.csv', delimiter=",", dtype="str")
 data = pd.read_csv('USvideos_modified.csv')
-X_names = ['tags']
-Y_names = ['category_id'] 
-for column in X_names:
+type_str_list = ['channel_title', 'tag_appeared_in_title', 'title', 'tags', 'description']
+for column in type_str_list:
     data[column] = data[column].astype(str)
 
-X = data[X_names]
-Y = data[Y_names]
-
-#Preprocess the data
-for i, row in X.iterrows():
-    row['tags'] = row['tags'].replace('|', ' ')
-
-#TFIDF
-vectorizer = TfidfVectorizer()
-tfidf = vectorizer.fit_transform(X['tags'])
-print(tfidf.shape)
-
-
-
-
-
-
-
+data['category_id'] = data['category_id'].astype(int)
 
 #non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
 
@@ -111,9 +90,3 @@ print("\n--------------------------------------------------------------")
 
 
 
-
-##non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
-##l = np.empty(shape=[len(data),], dtype='str')
-##j=0
-##for i,row in data.iterrows():
-##    row['title'] = row['title'].translate(non_bmp_map)
