@@ -13,12 +13,11 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 import time
 from sklearn.metrics import confusion_matrix
+from sklearn.neural_network import MLPClassifier
+
 
 
 #Read Data
-
-#data = np.loadtxt('USvideos_modified.csv', dtype=delimiter=',', usecols=(15), skiprows=1)
-
 data = pd.read_csv('USvideos_modified.csv')
 X_names = ['tags']
 Y_names = ['category_id'] 
@@ -85,18 +84,27 @@ def neural_network_model(hidden_units, error_function, data, label):
 
     # Compile & Fit model
     model.compile(loss=error_function, optimizer=sgd, metrics=['accuracy'])
-    model.fit(X_train, Y_train, validation_split=0.2, epochs=10, batch_size=100, verbose=0, callbacks=callbacks_list,)
+    model.fit(X_train, Y_train, validation_split=0.2, epochs=10, batch_size=100, verbose=0, callbacks=callbacks_list)
     endTime = time.clock()
     print("\nTime to build the model = ", endTime-startTime)
+    
     print_statistics(model, data, label)
+    print_statistics(model, X_test, y_test)
+
 
 def print_statistics(model, x_data, y_data):
     predictions = model.predict(x_data)
+    print(predictions)
+    print(predictions.shape)
+    
     fin_prediction = []
     for row in predictions:
         fin_prediction.append(np.argmax(row))
+        
+    print(fin_prediction.shape)
+    
     matrix = confusion_matrix(y_data, fin_prediction)
-    print(matrix.shape, fin_prediction.shape)
+    print(len(matrix), len(matrix[0]))
     sum = 0
     print("\nClass Accuracies:")
     for i in range(len(matrix)):
@@ -104,6 +112,37 @@ def print_statistics(model, x_data, y_data):
         print("Class ", i, ": ", round(matrix[i][i]/np.sum(matrix[i]), 4))
     print("\nOverall Accuracy: ", round(sum/np.sum(matrix), 4))
     print("\nConfusion Matrix:\n", matrix)
+
+def nn():
+    #Hyper-parameters
+    solver='adam'
+    activation='relu'
+    alpha=0.001
+    max_iter=200
+    early_stopping=True
+    hidden_layer_sizes=(2000,3)
+    random_state=1
+    
+    print("\n\nNeural Network")
+    nn = MLPClassifier(solver=solver,
+                       activation=activation,
+                       alpha=alpha,
+                       max_iter=max_iter,
+                       early_stopping=early_stopping,
+                       hidden_layer_sizes=hidden_layer_sizes,
+                       random_state=random_state)
+    nn.fit(X_train, y_train)
+    print_stats(nn, X_test, y_test)
+
+
+def print_stats(model, X_test, Y_test):
+    prediction = model.predict(X_test)
+    matrix = confusion_matrix(Y_test, prediction)
+    print("Confusion Matrix:\n", matrix)
+    print("Overall Accuracy:\n",
+          (matrix[0,0]+matrix[1,1])/sum(sum(matrix)))
+
+
 
 
 print("\nTraining Data Statistics:\n")
