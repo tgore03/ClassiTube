@@ -55,6 +55,23 @@ for i in range(len(data)):
 
 startTime = time.clock()
 
+#Maps the values in label to range(1, 16)
+label_values = set(labels)
+label_values = list(label_values)
+
+if LOG:
+    print("Uniques values in label:",label_values)
+    print("No of Unique values:",len(label_values))
+
+for i in range(len(labels)):
+    labels[i] = label_values.index(labels[i])
+
+if LOG:
+    print("After Mapping labels to positions of its unique values")
+    print("labels: ", labels)
+    print()
+
+
 #TFIDF
 vectorizer = TfidfVectorizer(stop_words='english')
 X = vectorizer.fit_transform(data[:,2])
@@ -72,12 +89,13 @@ if LOG:
 #PCA
 pca = PCA(0.95)
 pca.fit(X)
-A = pca.transform(X)
+pca.transform_transform(X)
+
 if LOG:
     print("PCA")
     print("Explained Variance:", pca.explained_variance_)
     print("Explained Variance Ratio Sum:", pca.explained_variance_ratio_.sum())
-    print("PCA Transformed Data Shape:\n",A.shape)
+    print("PCA Transformed Data Shape:\n",X.shape)
     print()
 
 
@@ -130,7 +148,7 @@ def neural_network_model(hidden_units, error_function, data, label):
     model.fit(X_train, Y_train, validation_split=0.2, epochs=10, batch_size=100, verbose=0, callbacks=callbacks_list)
     endTime = time.clock()
     print("\nTime to build the model = ", endTime-startTime)
-    
+   
     print_statistics(model, data, label)
     print_statistics(model, X_test, y_test)
 
@@ -175,5 +193,3 @@ print("\nTraining Data Statistics:\n")
 print("Relu Hidden Units with Cross-Entropy Error Function")
 neural_network_model('relu', 'categorical_crossentropy', X_train, y_train)
 print("\n--------------------------------------------------------------")
-
-
