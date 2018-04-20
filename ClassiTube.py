@@ -90,9 +90,9 @@ def tf_idf(data):
         print("Vector Shape:", X.shape)
         print()
 
-    return X
+    return X, vectorizer
 
-# Perfrom the PCA on the input data set
+# Perform the PCA on the input data set
 def do_pca(X):
     #PCA
     pca = PCA(0.95)
@@ -147,16 +147,23 @@ def use_ann(X,y):
     print("Y_train: ",Y_train.shape)
         
     model.fit(X_train, Y_train, validation_split=0.2, epochs=10, batch_size=100, verbose=0, callbacks=callbacks_list) 
-    predictions = model.predict(x_data)
-    y_pred = np.empty(shape = y_data.shape)
+
+    predictions = model.predict(X_test)
+
+    y_pred = decode_output(y_test,predictions)
+    #print_statistics(y_train,y_pred)
+    print_statistics(y_test,y_pred)
+    return model
+
+# decode c dimension output to 1 dimension
+def decode_output(y_test,predictions):
+    # 1-of-c output decoding
+    y_pred = np.empty(shape = y_test.shape)
     i=0
     for row in predictions:
         y_pred[i] = np.argmax(row)
         i+=1
-   
-    #print_statistics(y_train,y_pred)
-    print_statistics(y_test,y_pred)
-    return model
+    return y_pred
 
 # print the confusion matrix, class accuracies and overall accuracy
 def print_statistics(y_test,y_pred):
@@ -173,10 +180,10 @@ def print_statistics(y_test,y_pred):
     return accuracy
 
 # Build the K-Nearest Neighbors model
-def use_kNN(X,y):
+def use_kNN(X,y,l,h):
     # Split dataset to train and test data
     X_train, X_test, y_train, y_test = train_test_split(X, y.T, test_size=0.20, random_state=13)
-    k_range = range(1,26)
+    k_range = range(l,h)
     scores = []
     for k in k_range:
         print("K - Nearest Neighbors")
@@ -201,7 +208,7 @@ def plot_kNN(k_range, scores):
 def build_models(f):
     data, y = read_data(f)
 
-    X = tf_idf(data)
+    X, tfidf = tf_idf(data)
 
     X, pca = do_pca(X)
 
@@ -211,25 +218,28 @@ def build_models(f):
     print("\nTime to build the model = ", time.clock()-start_time)
 
     # kNN
+    kmin = 5
+    kmax = 6
     start_time=time.clock()
-    knn, k_range, scores = use_kNN(X,y)
+    knn, k_range, scores = use_kNN(X,y,kmin,kmax)
     print("\nTime to build the model = ", time.clock()-start_time)
     plot_kNN(k_range, scores)
     
-    return pca, ann, knn 
+    return tfidf, pca, ann, knn 
 
 # Test the new data point on already build models
-def test_model(pca, ann, knn):
+def test_models(tfidf, pca, ann, knn):
     data, y = read_data(file_test)
-
-    X = tf_idf(data)
-
-    X = pca.trasform(X)
+    #X = tfidf.fit_transform(data[:,2])
+    X = tfidf.transform(data[:,2])
+    X = X.todense()
+    X = pca.transform(X)
     
     # use ANN
     start_time=time.clock()
-    y_pred = ann.predict(X)
+    prediction = ann.predict(X)
     y_test = y.T
+    y_pred = decode_output(y_test,prediction) 
     print_statistics(y_test,y_pred)
     print("\nTime to build the model = ", time.clock()-start_time)
 
@@ -243,10 +253,10 @@ def test_model(pca, ann, knn):
 # main method 
 def main(file_train, file_test):
     # Buildling ANN and kNN models
-    pca, ann, knn = build_models(file_train)
+    tfidf, pca, ann, knn = build_models(file_train)
 
     # Predicting new data point using ANN and kNN
-    test_models(pca,ann,knn)
+    test_models(tfidf,pca,ann,knn)
 
 # Training and testing the model on input dataset
 file_train ='USvideos_modified.csv' 
