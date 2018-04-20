@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9847c26b-3d6d-421b-8672-bd040b27dd1a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/ClassiTube.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClassiTube.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,15 +16,19 @@
       <file leaf-file-name="ClassiTube.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ClassiTube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="282" column="4" lean-forward="true" selection-start-line="282" selection-start-column="4" selection-end-line="282" selection-end-column="4" />
+            <state relative-caret-position="519">
+              <caret line="280" lean-forward="true" selection-start-line="280" selection-end-line="280" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#837#2555#0" />
+                <element signature="e#2652#2789#0" />
+                <element signature="e#2848#2984#0" />
                 <element signature="e#3473#3806#0" />
                 <element signature="e#3914#5722#0" />
                 <element signature="e#5833#6206#0" />
                 <element signature="e#6268#6744#0" />
                 <element signature="e#6831#7046#0" />
+                <element signature="e#7127#7247#0" />
               </folding>
             </state>
           </provider>
@@ -229,15 +233,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ClassiTube.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="282" column="4" lean-forward="true" selection-start-line="282" selection-start-column="4" selection-end-line="282" selection-end-column="4" />
+        <state relative-caret-position="519">
+          <caret line="280" lean-forward="true" selection-start-line="280" selection-end-line="280" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#837#2555#0" />
+            <element signature="e#2652#2789#0" />
+            <element signature="e#2848#2984#0" />
             <element signature="e#3473#3806#0" />
             <element signature="e#3914#5722#0" />
             <element signature="e#5833#6206#0" />
             <element signature="e#6268#6744#0" />
             <element signature="e#6831#7046#0" />
+            <element signature="e#7127#7247#0" />
           </folding>
         </state>
       </provider>
