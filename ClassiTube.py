@@ -50,7 +50,7 @@ def read_data(file):
         print("Shape of Labels:",labels.shape)
         print()
 
-    #Preprocess the data
+    #Replace "|" in Tags with " "
     for i in range(len(data)):
         data[i,2] = data[i,2].replace('|', ' ')
 
@@ -73,6 +73,24 @@ def read_data(file):
         print()
 
     return data,y
+
+#Store X obtained after PCA transformation
+def store_instance(filename, X, y, tfidf, pca):
+    np.savez(filename, X, y, tfidf.get_params(), pca.get_params())
+    print(X.dtype)
+    print(X.shape, y.shape)
+    print(tfidf.get_params)
+    print(pca.get_params)
+
+#Read PCA Transformed X from file
+def read_instance(filename):
+    X, y, tfidf, pca = np.load(filename)
+    tfidf = TfidfVectorizer.set_params(tfidf)
+    pca = PCA.set_params(pca)
+    print(X.shape, y.shape)
+    print(tfidf.get_params)
+    print(pca.get_params)
+    return X, y, tfidf, pca
 
 # Compute the TF-IDF vectors for data points
 def tf_idf(data):
@@ -105,7 +123,7 @@ def do_pca(X):
         print("Explained Variance Ratio Sum:", pca.explained_variance_ratio_.sum())
         print("PCA Transformed Data Shape:\n",X.shape)
         print()
-    return X,pca;
+    return X, pca
 
 # Build a neural network model for input data, validate it and run on test data set
 def use_ann(X,y):
@@ -202,37 +220,47 @@ def plot_kNN(k_range, scores):
     plt.plot(k_range, scores)
     plt.xlabel('Value of K for KNN')
     plt.ylabel('Testing Accuracy')
+    #plt.show()
     print()
 
-# method to build ANN and kNN models
-def build_models(f):
+# Preprocess data and store it in the file
+def process_data(f, filename):
     data, y = read_data(f)
-
     X, tfidf = tf_idf(data)
-
     X, pca = do_pca(X)
+    store_instance(filename, X, y, tfidf, pca)
+    
+# method to build ANN and kNN models
+def build_models(f, X=None):
+    if X == None:
+        data, y = read_data(f)
+        X, tfidf = tf_idf(data)
+        X, pca = do_pca(X)
 
     # ANN
     start_time=time.clock()
     ann = use_ann(X,y)
-    print("\nTime to build the model = ", time.clock()-start_time)
+    print("\nTime to build ANN model = ", time.clock()-start_time)
 
     # kNN
     kmin = 5
     kmax = 6
     start_time=time.clock()
+
     knn, k_range, scores = use_kNN(X,y,kmin,kmax)
-    print("\nTime to build the model = ", time.clock()-start_time)
+    print("\nTime to build KNN model = ", time.clock()-start_time)
     plot_kNN(k_range, scores)
     
     return tfidf, pca, ann, knn 
 
 # Test the new data point on already build models
 def test_models(tfidf, pca, ann, knn):
+
     data, y = read_data(file_test)
     #X = tfidf.fit_transform(data[:,2])
     X = tfidf.transform(data[:,2])
     X = X.todense()
+
     X = pca.transform(X)
     
     # use ANN
@@ -241,17 +269,21 @@ def test_models(tfidf, pca, ann, knn):
     y_test = y.T
     y_pred = decode_output(y_test,prediction) 
     print_statistics(y_test,y_pred)
-    print("\nTime to build the model = ", time.clock()-start_time)
+    print("\nTime to test ANN model = ", time.clock()-start_time)
 
     # use kNN 
     start_time=time.clock()
     y_pred = knn.predict(X)
     y_test = y.T
     print_statistics(y_test,y_pred)
-    print("\nTime to build the model = ", time.clock()-start_time)
+    print("\nTime to test KNN model = ", time.clock()-start_time)
 
 # main method 
 def main(file_train, file_test):
+    # Preprocess data and store it in file
+    #process_data(file_train, "instance_file")
+    #X, y, tfidf, pca = read_instance("instance_file.npz")
+    
     # Buildling ANN and kNN models
     tfidf, pca, ann, knn = build_models(file_train)
 
