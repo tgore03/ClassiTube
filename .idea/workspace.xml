@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9847c26b-3d6d-421b-8672-bd040b27dd1a" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.ClassiTube.py.swp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClassiTube.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClassiTube.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/USvideos_modified_test.csv" beforeDir="false" afterPath="$PROJECT_DIR$/USvideos_modified_test.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoCategorization_Final Report.docx" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCategorization_Final Report.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clustering.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/instance_file.npz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,23 +17,22 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file leaf-file-name="ClassiTube.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ClassiTube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="211" column="31" lean-forward="true" selection-start-line="211" selection-start-column="31" selection-end-line="211" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#837#2555#0" />
-                <element signature="e#2652#2789#0" />
-                <element signature="e#2848#2984#0" />
-              </folding>
+            <state relative-caret-position="221">
+              <caret line="282" column="17" lean-forward="true" selection-start-line="282" selection-start-column="17" selection-end-line="282" selection-end-column="17" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>read_data</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,6 +40,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/ClassiTube.py" />
       </list>
     </option>
@@ -53,9 +56,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -67,6 +67,9 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -88,7 +91,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.ClassiTube">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     </configuration>
@@ -126,6 +129,24 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CS574 Project - Github" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -148,9 +169,14 @@
       <properties />
       <listeners />
     </configuration>
+    <list>
+      <item itemvalue="Python.ClassiTube" />
+      <item itemvalue="Python.test" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.ClassiTube" />
+        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -178,13 +204,12 @@
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3304721" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.5381356" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32905984" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23221476" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24228188" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -196,6 +221,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -203,16 +229,12 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ClassiTube.py</url>
-          <line>86</line>
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="2" />
+      <option name="time" value="11" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/ClassiTube.py" />
+    <entry file="file://$PROJECT_DIR$/ClassiTube.py" />
     <entry file="file://C:/Program Files/Python36/Lib/site-packages/numpy/lib/npyio.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="130">
@@ -227,16 +249,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2557">
+          <caret line="167" column="27" lean-forward="true" selection-start-line="167" selection-start-column="27" selection-end-line="167" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ClassiTube.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="211" column="31" lean-forward="true" selection-start-line="211" selection-start-column="31" selection-end-line="211" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#837#2555#0" />
-            <element signature="e#2652#2789#0" />
-            <element signature="e#2848#2984#0" />
-          </folding>
+        <state relative-caret-position="221">
+          <caret line="282" column="17" lean-forward="true" selection-start-line="282" selection-start-column="17" selection-end-line="282" selection-end-column="17" />
         </state>
       </provider>
     </entry>

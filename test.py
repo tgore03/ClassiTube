@@ -89,7 +89,7 @@ if LOG:
 #PCA
 pca = PCA(0.95)
 pca.fit(X)
-pca.transform_transform(X)
+pca.fit_transform(X)
 
 if LOG:
     print("PCA")
@@ -100,7 +100,7 @@ if LOG:
 
 
 #Split dataset to train and test data
-X_train, X_test, y_train, y_test = train_test_split(A, labels.T, test_size=0.25, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, labels.T, test_size=0.25, random_state=42)
 if LOG:
     print("After train test Split")
     print("X_train Shape:", X_train.shape)
@@ -131,11 +131,11 @@ neurons = 3000
 
 # Neural Network Model
 if LOG:
-    print("len(A):", len(A), "len(A[1]:", len(A[1])) 
+    print("len(A):", len(X), "len(A[1]:", len(X[1]))
 def neural_network_model(hidden_units, error_function, data, label):
 
     model = Sequential()
-    model.add(Dense(neurons, input_dim=len(A[0]), activation=hidden_units))  # First hidden layer
+    model.add(Dense(neurons, input_dim=len(X[0]), activation=hidden_units))  # First hidden layer
     model.add(Dense(neurons, activation=hidden_units))  # Second hidden layer
     #model.add(Dense(neurons, activation=hidden_units))  # Third hidden layer
     model.add(Dense(16, activation='softmax'))  # Softmax function for output layer

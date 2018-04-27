@@ -1,27 +1,31 @@
+from io import open
+
 import pandas as pd
 import numpy as np
 import time
 import matplotlib.pyplot as plt
 
+from sklearn.cluster import KMeans
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import KFold
-from sklearn.neural_network import MLPClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.neural_network import MLPClassifier
+
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+
+import pickle
 from keras.models import Sequential
-from keras.layers import Dense, Activation, Flatten
+from keras.layers import Dense
 from keras.utils import np_utils
 from keras.callbacks import EarlyStopping
 from keras import optimizers
 
-LOG=False
+LOG=True
 
 # Read the input data, store it in numpy array, preprocess it and maps the labels to indexes 
-def read_data(file):
+def read_data(file, label_values=None):
     #Read Data
     data = pd.read_csv(file)
     if LOG:
@@ -33,7 +37,7 @@ def read_data(file):
              'views', 'likes', 'dislikes', 'comment_count', 'comments_disabled',
              'ratings_disabled', 'tag_appeared_in_title_count', 'tag_appeared_in_title',
              'trend_day_count', 'trend.publish.diff', 'trend_tag_highest',
-             'trend_tag_total','subscriber']
+             'trend_tag_total','subscriber','channel_title']
 
     data = data.drop(columns, axis=1)
     if LOG:
@@ -41,7 +45,8 @@ def read_data(file):
 
     #Extract Labels from data and convert data to Numpy Matrix
     labels = np.array(data['category_id'].tolist())   
-    data = data.as_matrix(columns = ['channel_title', 'title', 'tags', 'description', 'tags_count'])
+    data = data.as_matrix(columns = ['tags', 'title', 'description', 'tags_count'])
+    #data = data.as_matrix(columns = ['tags'])
     data = data.astype(str)
 
     if LOG:
@@ -52,19 +57,30 @@ def read_data(file):
 
     #Replace "|" in Tags with " "
     for i in range(len(data)):
-        data[i,2] = data[i,2].replace('|', ' ')
+        data[i,0] = data[i,0].replace('|', ' ')
+
+
+    #Merge multiple columns into one column
+    sep=" "
+    for i in range(len(data)):
+        data[i,0] = sep.join(data[i])
 
     #Maps the values in label to range(1, 16)
-    label_values = set(labels)
-    label_values = list(label_values)
+    y = np.empty(shape=labels.shape, dtype=int)
+    if label_values is None:
+        label_values = set(labels)
+        label_values = list(label_values)
 
-    if LOG:
-        print("Uniques values in label:",label_values)
-        print("No of Unique values:",len(label_values))
+        if LOG:
+            print("Uniques values in label:",label_values)
+            print("No of Unique values:",len(label_values))
 
-    y = np.empty(shape=labels.shape)
-    for i in range(len(labels)):
-        y[i] = label_values.index(labels[i])
+        for i in range(len(labels)):
+            y[i] = label_values.index(labels[i])
+    else:
+        for i in range(len(labels)):
+
+            y[i] = list(label_values).index(labels[i])
 
     if LOG:
         print("After Mapping labels to positions of its unique values")
@@ -72,31 +88,39 @@ def read_data(file):
         print("unique values in labels", set(y))
         print()
 
-    return data,y
+    return data[:,0],y, label_values
 
 #Store X obtained after PCA transformation
-def store_instance(filename, X, y, tfidf, pca):
-    np.savez(filename, X, y, tfidf.get_params(), pca.get_params())
-    print(X.dtype)
-    print(X.shape, y.shape)
-    print(tfidf.get_params)
-    print(pca.get_params)
+def store_array(filename, array):
+    np.save(filename, array)
+    if LOG:
+        print(array.shape)
+
+def store_instance(filename, instance):
+    pickle.dump(instance, open(filename, 'wb'))
+    if LOG:
+        print(instance.get_params())
+
+def read_array(filename):
+    array= np.load(filename)
+    if LOG:
+        print(array.shape)
+    return array
 
 #Read PCA Transformed X from file
 def read_instance(filename):
-    X, y, tfidf, pca = np.load(filename)
-    tfidf = TfidfVectorizer.set_params(tfidf)
-    pca = PCA.set_params(pca)
-    print(X.shape, y.shape)
-    print(tfidf.get_params)
-    print(pca.get_params)
-    return X, y, tfidf, pca
+    instance = pickle.load(open(filename, 'rb'))
+    if LOG:
+        print(instance.get_params())
+    return instance
 
 # Compute the TF-IDF vectors for data points
 def tf_idf(data):
+
     #TFIDF
     vectorizer = TfidfVectorizer(stop_words='english')
-    X = vectorizer.fit_transform(data[:,2])
+
+    X = vectorizer.fit_transform(data)
     if LOG:
         print("TFIDF vectors:")
         print("Vector shape:", X.shape)
@@ -129,49 +153,65 @@ def do_pca(X):
 def use_ann(X,y):
     #Perform Neural Networks
     # define early stopping callback
-    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.0001, patience=5, \
+    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.00001, patience=10, \
                               verbose=1, mode='auto')
     callbacks_list = [earlystop]
 
     # Hyper-Parameters
-    momentum_rate = 0.9
+    momentum_rate = 0.4
     filters = 1024
     epochs = 10
     batch_size = 100
     learning_rate = 0.05
-    neurons = 30
-    hidden_units = 'relu'
+    neurons = 500
+    hidden_units = 'linear'
     error_function = 'categorical_crossentropy'
 
     # Neural Network Model
-    print("Neural Networks")
+    print("\n\n\nNeural Networks")
+    if LOG:
+        print("len(X[0]):", len(X[0]))
+        print("len(set(y)):", len(set(y)))
+
     model = Sequential()
-    model.add(Dense(neurons, input_dim=len(X[0]), activation=hidden_units))  # First hidden layer
-    model.add(Dense(neurons, activation=hidden_units))  # Second hidden layer
-    #model.add(Dense(neurons, activation=hidden_units))  # Third hidden layer
+    model.add(Dense(300, input_dim=len(X[0]), activation=hidden_units))  # First hidden layer
+    model.add(Dense(300, activation=hidden_units))  # Second hidden layer
+    model.add(Dense(300, activation=hidden_units))  # Third hidden layer
+    model.add(Dense(300, activation=hidden_units))
+    model.add(Dense(300, activation=hidden_units))
     model.add(Dense(len(set(y)), activation='softmax'))  # Softmax function for output layer
 
     # Split dataset to train and test data
-    X_train, X_test, y_train, y_test = train_test_split(X, y.T, test_size=0.20, random_state=13)
+    X_train, X_test, y_train, y_test = train_test_split(X, y.T, test_size=0.20, random_state=1)
 
     # Stochastic Gradient Descent for Optimization
     sgd = optimizers.SGD(lr=learning_rate, decay=1e-6, momentum=momentum_rate, nesterov=True)
+    adam = optimizers.Adam();
 
     # Compile the model
-    model.compile(loss=error_function, optimizer=sgd, metrics=['accuracy'])
+    model.compile(loss=error_function, optimizer=adam, metrics=['accuracy'])
  
     # 1-of-c output encoding
     Y_train = np_utils.to_categorical(y_train)
     print("Y_train: ",Y_train.shape)
         
-    model.fit(X_train, Y_train, validation_split=0.2, epochs=10, batch_size=100, verbose=0, callbacks=callbacks_list) 
+    model.fit(X_train, Y_train, validation_split=0.2, epochs=100, batch_size=100, verbose=0, callbacks=callbacks_list)
 
     predictions = model.predict(X_test)
 
     y_pred = decode_output(y_test,predictions)
     #print_statistics(y_train,y_pred)
-    print_statistics(y_test,y_pred)
+    print_statistics(y_test,y_pred, deep=True)
+
     return model
+
+def do_kmeans(X, y):
+    kmeans = KMeans(n_clusters=2, random_state=0)
+    kmeans = kmeans.fit(X)
+    print("kmeans.labels_=", kmeans.labels_)
+
+
+
 
 # decode c dimension output to 1 dimension
 def decode_output(y_test,predictions):
@@ -184,31 +224,35 @@ def decode_output(y_test,predictions):
     return y_pred
 
 # print the confusion matrix, class accuracies and overall accuracy
-def print_statistics(y_test,y_pred):
-    matrix = confusion_matrix(y_test, y_pred)
+def print_statistics(y_test,y_pred, deep=False):
     accuracy = accuracy_score(y_test, y_pred)
 
-    sum = 0
-    print("\nClass Accuracies:")
-    for i in range(len(matrix)):
-        sum += matrix[i][i]
-        print("Class ", i, ": ", round(matrix[i][i]/np.sum(matrix[i]), 4))
-    print("Confusion Matrix:\n", matrix)
+    if deep:
+        matrix = confusion_matrix(y_test, y_pred)
+        print(len(matrix))
+        sum = 0
+        print("Class Accuracies:")
+        for i in range(len(matrix)):
+            sum += matrix[i][i]
+            print("Class ", i, ": ", round(matrix[i][i]/np.sum(matrix[i]), 4))
+        print("Confusion Matrix:\n", matrix)
     print("Overall Accuracy:\n", accuracy)
     return accuracy
 
 # Build the K-Nearest Neighbors model
 def use_kNN(X,y,l,h):
     # Split dataset to train and test data
-    X_train, X_test, y_train, y_test = train_test_split(X, y.T, test_size=0.20, random_state=13)
+    X_train, X_test, y_train, y_test = train_test_split(X, y.T, test_size=0.20, random_state=None)
     k_range = range(l,h)
     scores = []
     for k in k_range:
-        print("K - Nearest Neighbors")
-        knn = KNeighborsClassifier(n_neighbors=k)
+        start_time=time.clock()
+        print("\n\n\nK - Nearest Neighbors")
+        knn = KNeighborsClassifier(n_neighbors=k, n_jobs=3)
         knn.fit(X_train, y_train)
         y_pred = knn.predict(X_test)
-        accuracy = print_statistics(y_test, y_pred)
+        print("Time to build the model : ", time.clock() - start_time)
+        accuracy = print_statistics(y_test, y_pred, deep=True)
         scores.append(accuracy)
 
     return knn, k_range, scores
@@ -220,75 +264,93 @@ def plot_kNN(k_range, scores):
     plt.plot(k_range, scores)
     plt.xlabel('Value of K for KNN')
     plt.ylabel('Testing Accuracy')
-    #plt.show()
-    print()
+    plt.show()
 
 # Preprocess data and store it in the file
-def process_data(f, filename):
-    data, y = read_data(f)
+def process_data(f):
+    data, y, label_map = read_data(f)
     X, tfidf = tf_idf(data)
     X, pca = do_pca(X)
-    store_instance(filename, X, y, tfidf, pca)
-    
+
+    #Store the result
+    store_array("X_array", X)
+    store_array("y_array", y)
+    store_array("label_map",label_map)
+    store_instance("tfidf.sav",tfidf)
+    store_instance("pca.sav", pca)
+
 # method to build ANN and kNN models
-def build_models(f, X=None):
-    if X == None:
-        data, y = read_data(f)
+def build_models(f, X=None, y=None, label_map=None, tfidf=None, pca=None):
+
+    if X is None:
+        data, y, label_map = read_data(f)
         X, tfidf = tf_idf(data)
         X, pca = do_pca(X)
 
     # ANN
     start_time=time.clock()
-    ann = use_ann(X,y)
-    print("\nTime to build ANN model = ", time.clock()-start_time)
+    #ann = use_ann(X,y)
+    print("Time to build ANN model = ", time.clock()-start_time)
 
     # kNN
-    kmin = 5
-    kmax = 6
+    kmin = 1
+    kmax = 20
     start_time=time.clock()
 
     knn, k_range, scores = use_kNN(X,y,kmin,kmax)
-    print("\nTime to build KNN model = ", time.clock()-start_time)
+    print("Time to build KNN model = ", time.clock()-start_time)
     plot_kNN(k_range, scores)
     
-    return tfidf, pca, ann, knn 
+    return label_map, tfidf, pca, ann, knn
 
 # Test the new data point on already build models
-def test_models(tfidf, pca, ann, knn):
+def test_models(label_map, tfidf, pca, ann, knn):
+    print("\n\n\nTesting the data")
 
-    data, y = read_data(file_test)
+    data, y, label_map = read_data(file_test, label_map)
     #X = tfidf.fit_transform(data[:,2])
-    X = tfidf.transform(data[:,2])
+    X = tfidf.transform(data)
     X = X.todense()
 
     X = pca.transform(X)
     
     # use ANN
     start_time=time.clock()
-    prediction = ann.predict(X)
-    y_test = y.T
-    y_pred = decode_output(y_test,prediction) 
-    print_statistics(y_test,y_pred)
-    print("\nTime to test ANN model = ", time.clock()-start_time)
+    #prediction = ann.predict(X)
+    #y_test = y.T
+    #y_pred = decode_output(y_test,prediction) 
+    #print_statistics(y_test,y_pred, deep=False)
+    print("y_test=",y_test, " y_pred=",y_pred)
+    print("Time to test ANN model = ", time.clock()-start_time)
 
     # use kNN 
     start_time=time.clock()
     y_pred = knn.predict(X)
     y_test = y.T
-    print_statistics(y_test,y_pred)
-    print("\nTime to test KNN model = ", time.clock()-start_time)
+    print_statistics(y_test,y_pred, deep=False)
+    print("y_test=",y_test, " y_pred=",y_pred)
+    print("Time to test KNN model = ", time.clock()-start_time)
 
 # main method 
 def main(file_train, file_test):
     # Preprocess data and store it in file
-    #process_data(file_train, "instance_file")
-    #X, y, tfidf, pca = read_instance("instance_file.npz")
-    
+    #process_data(file_train)
+    #print("Data Processed")
+
+    #Read data from files
+    X=read_array("X_array.npy")
+    y=read_array("y_array.npy")
+    label_map=read_array("label_map.npy")
+    tfidf=read_instance("tfidf.sav")
+    pca=read_instance("pca.sav")
+    print("Data read")
+
     # Buildling ANN and kNN models
-    tfidf, pca, ann, knn = build_models(file_train)
+    label_map, tfidf, pca, ann, knn = build_models(file_train, X, y, label_map, tfidf, pca)
+    #tfidf, pca, ann, knn = build_models(file_train)
 
     # Predicting new data point using ANN and kNN
-    test_models(tfidf,pca,ann,knn)
+    test_models(label_map,tfidf,pca,ann,knn)
 
 # Training and testing the model on input dataset
 file_train ='USvideos_modified.csv' 
