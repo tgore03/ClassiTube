@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9847c26b-3d6d-421b-8672-bd040b27dd1a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClassiTube.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClassiTube.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VideoCategorization_Final Report.docx" beforeDir="false" afterPath="$PROJECT_DIR$/VideoCategorization_Final Report.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clustering.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/instance_file.npz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,12 +13,22 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="ClassiTube.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ClassiTube.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="282" column="17" lean-forward="true" selection-start-line="282" selection-start-column="17" selection-end-line="282" selection-end-column="17" />
+            <state relative-caret-position="263">
+              <caret line="257" column="46" selection-start-line="257" selection-start-column="46" selection-end-line="257" selection-end-column="46" />
+              <folding>
+                <element signature="e#772#2853#0" />
+                <element signature="e#3227#3290#0" />
+                <element signature="e#3477#3569#0" />
+                <element signature="e#3743#3830#0" />
+                <element signature="e#4010#4123#0" />
+                <element signature="e#3496#3851#0" />
+                <element signature="e#4843#5176#0" />
+                <element signature="e#5422#7495#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,6 +62,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -67,7 +74,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
       <pane id="Scope" />
     </panes>
@@ -209,7 +215,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32905984" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24228188" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24563758" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -229,10 +235,27 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="11" />
+      <option name="time" value="12" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/ClassiTube.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4420">
+          <caret line="282" column="17" lean-forward="true" selection-start-line="282" selection-start-column="17" selection-end-line="282" selection-end-column="17" />
+          <folding>
+            <element signature="e#772#2853#0" />
+            <element signature="e#3227#3290#0" />
+            <element signature="e#3477#3569#0" />
+            <element signature="e#3743#3830#0" />
+            <element signature="e#4010#4123#0" />
+            <element signature="e#3496#3851#0" />
+            <element signature="e#4843#5176#0" />
+            <element signature="e#5422#7495#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ClassiTube.py" />
     <entry file="file://$PROJECT_DIR$/ClassiTube.py" />
     <entry file="file://C:/Program Files/Python36/Lib/site-packages/numpy/lib/npyio.py">
@@ -258,8 +281,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ClassiTube.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="282" column="17" lean-forward="true" selection-start-line="282" selection-start-column="17" selection-end-line="282" selection-end-column="17" />
+        <state relative-caret-position="263">
+          <caret line="257" column="46" selection-start-line="257" selection-start-column="46" selection-end-line="257" selection-end-column="46" />
+          <folding>
+            <element signature="e#772#2853#0" />
+            <element signature="e#3227#3290#0" />
+            <element signature="e#3477#3569#0" />
+            <element signature="e#3743#3830#0" />
+            <element signature="e#4010#4123#0" />
+            <element signature="e#3496#3851#0" />
+            <element signature="e#4843#5176#0" />
+            <element signature="e#5422#7495#0" />
+          </folding>
         </state>
       </provider>
     </entry>

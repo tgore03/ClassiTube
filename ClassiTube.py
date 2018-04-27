@@ -26,6 +26,12 @@ LOG=True
 
 # Read the input data, store it in numpy array, preprocess it and maps the labels to indexes 
 def read_data(file, label_values=None):
+    '''
+    Read data from file, extract label and features, convert to numpy array and hashes the category labels with its index
+    :param file: data file
+    :param label_values: hashmap of category id with category index
+    :return: Data in matrix, labels, hash map for labels
+    '''
     #Read Data
     data = pd.read_csv(file)
     if LOG:
@@ -92,16 +98,33 @@ def read_data(file, label_values=None):
 
 #Store X obtained after PCA transformation
 def store_array(filename, array):
+    '''
+    Stores the array to file
+    :param filename: file to store array in.
+    :param array: array to store
+    :return: None
+    '''
     np.save(filename, array)
     if LOG:
         print(array.shape)
 
 def store_instance(filename, instance):
+    '''
+    store an object to file
+    :param filename: file to store object in.
+    :param instance: instance to store
+    :return: None
+    '''
     pickle.dump(instance, open(filename, 'wb'))
     if LOG:
         print(instance.get_params())
 
 def read_array(filename):
+    '''
+    Read an numpy array from file
+    :param filename: file to read from
+    :return: numpy array
+    '''
     array= np.load(filename)
     if LOG:
         print(array.shape)
@@ -109,6 +132,11 @@ def read_array(filename):
 
 #Read PCA Transformed X from file
 def read_instance(filename):
+    '''
+    Read an object from file
+    :param filename: file to read object from
+    :return: object
+    '''
     instance = pickle.load(open(filename, 'rb'))
     if LOG:
         print(instance.get_params())
@@ -116,7 +144,11 @@ def read_instance(filename):
 
 # Compute the TF-IDF vectors for data points
 def tf_idf(data):
-
+    '''
+    converts the textual feature to numberical format
+    :param data:
+    :return: numberical data, TFIDF model
+    '''
     #TFIDF
     vectorizer = TfidfVectorizer(stop_words='english')
 
@@ -136,6 +168,11 @@ def tf_idf(data):
 
 # Perform the PCA on the input data set
 def do_pca(X):
+    '''
+    Performs PCA dimensionality reduction on TFIDF vectors
+    :param X: TFIDF matrix
+    :return: PCA matrix, PCA model
+    '''
     #PCA
     pca = PCA(0.95)
     pca.fit(X)
@@ -151,7 +188,13 @@ def do_pca(X):
 
 # Build a neural network model for input data, validate it and run on test data set
 def use_ann(X,y):
-    #Perform Neural Networks
+    '''
+    Build Neural Network, Train it and Classify Training data on it
+    :param X: Training Data
+    :param y: Training Labels
+    :return: Neural Network Model
+    '''
+
     # define early stopping callback
     earlystop = EarlyStopping(monitor='val_acc', min_delta=0.00001, patience=10, \
                               verbose=1, mode='auto')
@@ -205,16 +248,15 @@ def use_ann(X,y):
 
     return model
 
-def do_kmeans(X, y):
-    kmeans = KMeans(n_clusters=2, random_state=0)
-    kmeans = kmeans.fit(X)
-    print("kmeans.labels_=", kmeans.labels_)
-
-
-
 
 # decode c dimension output to 1 dimension
 def decode_output(y_test,predictions):
+    '''
+    Converts the 1 of c NN output to 1 dimensional labels
+    :param y_test: testing labels - 1 dimensional
+    :param predictions: prediction labels - 1 of c
+    :return: prediction labels - 1 dimensional
+    '''
     # 1-of-c output decoding
     y_pred = np.empty(shape = y_test.shape)
     i=0
@@ -289,7 +331,7 @@ def build_models(f, X=None, y=None, label_map=None, tfidf=None, pca=None):
 
     # ANN
     start_time=time.clock()
-    #ann = use_ann(X,y)
+    ann = use_ann(X,y)
     print("Time to build ANN model = ", time.clock()-start_time)
 
     # kNN
@@ -316,10 +358,10 @@ def test_models(label_map, tfidf, pca, ann, knn):
     
     # use ANN
     start_time=time.clock()
-    #prediction = ann.predict(X)
-    #y_test = y.T
-    #y_pred = decode_output(y_test,prediction) 
-    #print_statistics(y_test,y_pred, deep=False)
+    prediction = ann.predict(X)
+    y_test = y.T
+    y_pred = decode_output(y_test,prediction)
+    print_statistics(y_test,y_pred, deep=False)
     print("y_test=",y_test, " y_pred=",y_pred)
     print("Time to test ANN model = ", time.clock()-start_time)
 
@@ -334,8 +376,8 @@ def test_models(label_map, tfidf, pca, ann, knn):
 # main method 
 def main(file_train, file_test):
     # Preprocess data and store it in file
-    #process_data(file_train)
-    #print("Data Processed")
+    process_data(file_train)
+    print("Data Processed")
 
     #Read data from files
     X=read_array("X_array.npy")
