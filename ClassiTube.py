@@ -267,6 +267,13 @@ def decode_output(y_test,predictions):
 
 # print the confusion matrix, class accuracies and overall accuracy
 def print_statistics(y_test,y_pred, deep=False):
+    '''
+    Prints the Class Conditional Accuracy, Overall Accuracy and Confusion matrix
+    :param y_test: testing labels
+    :param y_pred: predicted labels
+    :param deep: flag to set whether to print Confusion Matrix and Class Conditional Accuracy
+    :return: Overall Accuracy
+    '''
     accuracy = accuracy_score(y_test, y_pred)
 
     if deep:
@@ -283,6 +290,14 @@ def print_statistics(y_test,y_pred, deep=False):
 
 # Build the K-Nearest Neighbors model
 def use_kNN(X,y,l,h):
+    '''
+    Builds KNN model, Trains it and tests the accuracy.
+    :param X: Dataset
+    :param y: labels
+    :param l: lower range for cluster size
+    :param h: higher range for cluster size
+    :return: KNN model, Range and model scores
+    '''
     # Split dataset to train and test data
     X_train, X_test, y_train, y_test = train_test_split(X, y.T, test_size=0.20, random_state=None)
     k_range = range(l,h)
@@ -301,8 +316,12 @@ def use_kNN(X,y,l,h):
 
 # plot the kNN accuracy for different values of k
 def plot_kNN(k_range, scores):
-    # plot the relationship between K and testing accuracy
-    # plt.plot(x_axis, y_axis)
+    '''
+    plot the relationship between K and testing accuracy
+    :param k_range: Range of clustes
+    :param scores: Scores for each cluster in range
+    :return: None
+    '''
     plt.plot(k_range, scores)
     plt.xlabel('Value of K for KNN')
     plt.ylabel('Testing Accuracy')
@@ -310,6 +329,11 @@ def plot_kNN(k_range, scores):
 
 # Preprocess data and store it in the file
 def process_data(f):
+    '''
+    Method that handles all the preprocessing steps. Loading data, TFIDF, PCA and storing the preprocessed data
+    :param f: file to read data from
+    :return: None
+    '''
     data, y, label_map = read_data(f)
     X, tfidf = tf_idf(data)
     X, pca = do_pca(X)
@@ -323,7 +347,17 @@ def process_data(f):
 
 # method to build ANN and kNN models
 def build_models(f, X=None, y=None, label_map=None, tfidf=None, pca=None):
-
+    '''
+    Method that handles the training phase of all the models.
+    Performs ANN and KNN on the dataset read from the training file.
+    :param f: file to read from, it initialization failed
+    :param X: Dataset
+    :param y: labels
+    :param label_map: hash map of labels and their indicess
+    :param tfidf: TDIDF model - if initialized beforehand
+    :param pca: PCA model - if initialized beforehand
+    :return: label_map, tfidf, pca, ANN model, KNN model
+    '''
     if X is None:
         data, y, label_map = read_data(f)
         X, tfidf = tf_idf(data)
@@ -346,7 +380,17 @@ def build_models(f, X=None, y=None, label_map=None, tfidf=None, pca=None):
     return label_map, tfidf, pca, ann, knn
 
 # Test the new data point on already build models
-def test_models(label_map, tfidf, pca, ann, knn):
+def test_models(file_test, label_map, tfidf, pca, ann, knn):
+    '''
+    Method that handles the testing phase of all the models and prints the statistics for each test.
+    :param file_test: File containing data for testing models.
+    :param label_map: hash map of labels and their indices
+    :param tfidf: TFIDF model
+    :param pca: PCA model
+    :param ann: ANN model
+    :param knn: KNN model
+    :return:
+    '''
     print("\n\n\nTesting the data")
 
     data, y, label_map = read_data(file_test, label_map)
@@ -375,6 +419,12 @@ def test_models(label_map, tfidf, pca, ann, knn):
 
 # main method 
 def main(file_train, file_test):
+    '''
+    Main Method which handles the flow of the program
+    :param file_train: file containing data for training
+    :param file_test: file containind data for testing
+    :return: None
+    '''
     # Preprocess data and store it in file
     process_data(file_train)
     print("Data Processed")
@@ -392,7 +442,7 @@ def main(file_train, file_test):
     #tfidf, pca, ann, knn = build_models(file_train)
 
     # Predicting new data point using ANN and kNN
-    test_models(label_map,tfidf,pca,ann,knn)
+    test_models(file_test, label_map,tfidf,pca,ann,knn)
 
 # Training and testing the model on input dataset
 file_train ='USvideos_modified.csv' 
