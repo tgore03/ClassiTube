@@ -146,7 +146,7 @@ def read_instance(filename):
 def tf_idf(data):
     '''
     converts the textual feature to numberical format
-    :param data:
+    :param data: textual features
     :return: numberical data, TFIDF model
     '''
     #TFIDF
